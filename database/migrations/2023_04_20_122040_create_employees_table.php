@@ -1,0 +1,58 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('employees', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->integer('active')->default(1);
+            $table->text('remark')->default('n/a');
+            $table->unsignedBigInteger('position_id');
+            $table->foreign('position_id')
+                    ->references('id')
+                    ->on('positions')
+                    ->onUpdate('cascade')
+                    ->onDelete('restrict');
+            $table->unsignedBigInteger('department_id');
+            $table->foreign('department_id')
+                    ->references('id')
+                    ->on('departments')
+                    ->onUpdate('cascade')
+                    ->onDelete('restrict');
+            $table->unsignedBigInteger('created_by');
+            $table->foreign('created_by')
+                    ->references('id')
+                    ->on('users')
+                    ->onUpdate('cascade')
+                    ->onDelete('restrict');
+            $table->unsignedBigInteger('updated_by');
+            $table->foreign('updated_by')
+                    ->references('id')
+                    ->on('users')
+                    ->onUpdate('cascade')
+                    ->onDelete('restrict');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('employees');
+    }
+};
